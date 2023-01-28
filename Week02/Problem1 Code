@@ -1,0 +1,44 @@
+'''Problem 1'''
+import numpy as np
+from scipy.stats import norm, skew, kurtosis, ttest_1samp
+
+d = norm(0, 1)
+samples = 1000
+sample_size = 100000
+
+
+samples = d.rvs((samples, sample_size))
+
+
+sample_skew = skew(samples, axis=1, bias=False)
+sample_kurtosis = kurtosis(samples, axis=1, fisher=False, bias=False)
+
+
+sample_skew_mean = np.mean(sample_skew)
+pop_skew = d.stats(moments='s')
+
+sample_kurtosis_mean = np.mean(sample_kurtosis)
+pop_kurtosis = d.stats(moments='k')
+
+t_skew, p_skew = ttest_1samp(sample_skew, pop_skew)
+t_kurtosis, p_kurtosis = ttest_1samp(sample_kurtosis, pop_kurtosis)
+
+print("Sample skew mean:", sample_skew_mean)
+print("Population skew:", pop_skew)
+print("t-statistic for skew:", t_skew)
+print("p-value for skew:", p_skew)
+
+print("Sample kurtosis mean:", sample_kurtosis_mean)
+print("Population kurtosis:", pop_kurtosis)
+print("t-statistic for kurtosis:", t_kurtosis)
+print("p-value for kurtosis:", p_kurtosis)
+
+if p_skew > 0.05:
+    print("The p-value for skew is greater than 0.05, cannot reject the null hypothesis.")
+else:
+    print("The p-value for skew is less than 0.05, reject the null hypothesis.")
+
+if p_kurtosis > 0.05:
+    print("The p-value for kurtosis is greater than 0.05, cannot reject the null hypothesis.")
+else:
+    print("The p-value for kurtosis is less than 0.05, reject the null hypothesis.")
